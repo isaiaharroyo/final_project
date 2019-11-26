@@ -46,7 +46,7 @@ var setup = function(array2D)
     var xScale = d3.scaleLinear().domain([0,17]).range([0,width])
     var yScale = d3.scaleLinear().domain([0,10]).range([height,0])
     
-    var cScale = d3.scaleOrdinal(d3.schemeTableau10)
+    //var cScale = d3.scaleOrdinal(d3.schemeTableau10)
     
     var xAxis = d3.axisBottom(xScale)
     var yAxis = d3.axisLeft(yScale)
@@ -66,10 +66,10 @@ var setup = function(array2D)
         .attr("transform","translate(25,"+margins.top+")")
         .call(yAxis)
     
-    drawArray(array2D,xScale,yScale,cScale)
+    drawArray(array2D,xScale,yScale)
 }
 
-var drawArray = function(array2D,xScale,yScale,cScale)
+var drawArray = function(array2D,xScale,yScale)
 {
     var arrays = d3.select("#graph")
         .selectAll("g")
