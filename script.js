@@ -77,10 +77,7 @@ var drawArray = function(array2D,xScale,yScale)
         .enter()
         .append("g")
         .attr("fill","none")
-        .attr("stroke",function(arr)
-             {
-                return cScale(arr.graph);
-             })
+        .attr("stroke","black")
         .attr("stroke-width",3)
     
     var lineGenerator = d3.line()
