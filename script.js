@@ -44,7 +44,7 @@ var setup = function(array2D)
     var height = screen.height - margins.top - margins.bottom;
     
     var xScale = d3.scaleLinear().domain([0,40]).range([0,width])
-    var yScale = d3.scaleLinear().domain([0,7]).range([height,0])
+    var yScale = d3.scaleLinear().domain([0,6]).range([height,0])
     
     //var cScale = d3.scaleOrdinal(d3.schemeTableau10)
     
