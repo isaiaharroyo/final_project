@@ -4,7 +4,6 @@ gdpPromise.then(
 function(data)
     {
         console.log("GDP",data)
-        drawGraph(data)
     },
 function(err)
     {
@@ -26,4 +25,22 @@ var drawGraph = function(data)
         .append('div')
         .attr('class', 'horizon')
         .each(horizonChart);
+}
+
+var screen = {width:400,height:500}
+var margins = {top:10,right:50,bottom:50,left:50}
+
+var setup = function(array2D)
+{
+    d3.select("svg")
+        .attr("width",screen.width)
+        .attr("height",screen.height)
+        .append("g")
+        .attr("id","graph")
+        .attr("transform","translate("+margins.left+","+margins.top+")");
+    
+    var width = screen.width - margins.left - margins.right;
+    var height = screen.height - margins.top - margins.bottom;
+    
+    var xScale
 }
