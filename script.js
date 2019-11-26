@@ -4,7 +4,7 @@ gdpPromise.then(
 function(data)
     {
         console.log("GDP",data)
-        setup(data);
+        //setup(data);
     },
 function(err)
     {
@@ -43,7 +43,7 @@ var setup = function(array2D)
     var width = screen.width - margins.left - margins.right;
     var height = screen.height - margins.top - margins.bottom;
     
-    var xScale = d3.scaleLinear().domain([2000,2017]).range([0,width])
+    var xScale = d3.scaleLinear().domain([0,17]).range([0,width])
     var yScale = d3.scaleLinear().domain([0,10]).range([height,0])
     
     var cScale = d3.scaleOrdinal(d3.schemeTableau10)
@@ -79,7 +79,7 @@ var drawArray = function(array2D,xScale,yScale,cScale)
         .attr("fill","none")
         .attr("stroke",function(arr)
              {
-                return cScale(arr.Region);
+                return cScale(arr.graph);
              })
         .attr("stroke-width",3)
     
@@ -92,3 +92,9 @@ var drawArray = function(array2D,xScale,yScale,cScale)
         .datum(function(obj){return obj.arr})
         .attr("d",lineGenerator)
 }
+
+var thing = [
+        {graph:"GDP", arr:[1.5,3.7,3.0,2.0,-1.0,2.9,-0.1,4.7,3.2,1.7,0.5,0.5,3.6,0.5,3.2,3.2,-1.1,5.5,5.0,2.3,3.2,3.0,1.3,0.1,2.0,1.9,2.2,2.0,2.3,2.2,3.2,3.5,2.5,3.5,2.9,1.1,3.1,2.0,1.9]}
+    ]
+
+setup(thing);
