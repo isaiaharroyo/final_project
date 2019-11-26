@@ -2,10 +2,18 @@ body
 {
     width: 90%;
     margin: auto;
+    background-color: skyblue;
 }
 
 h1
 {
     text-align: center;
     margin-top: 20px;
+}
+
+svg
+{
+    display: block;
+    margin:auto;
+    background-color: white;
 }
