@@ -86,7 +86,7 @@ var drawArray = function(array2D,xScale,yScale,cScale)
     var lineGenerator = d3.line()
         .x(function(num,index){return xScale(index)})
         .y(function(num){return yScale(num)})
-        .curve(d3.curveNatural)
+        .curve(d3.curveLinear)
     
     arrays.append("path")
         .datum(function(obj){return obj.arr})
