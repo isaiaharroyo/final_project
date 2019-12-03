@@ -54,7 +54,7 @@ var setup = function(array2D)
     var width = screen.width - margins.left - margins.right;
     var height = screen.height - margins.top - margins.bottom;
     
-    var xScale = d3.scaleLinear().domain([1,290]).range([0,width])
+    var xScale = d3.scaleLinear().domain([1,80]).range([0,width])
     var yScale = d3.scaleLinear().domain([-15,20]).range([height,0])
     
     //var cScale = d3.scaleOrdinal(d3.schemeTableau10)
@@ -78,24 +78,30 @@ var setup = function(array2D)
         .attr("transform","translate(45,"+margins.top+")")
         .call(yAxis)
     
-    d3.select("#tooltip")
+    console.log("help",getData(array2D))
+    
+    d3.select("#graph")
         .selectAll("circle")
         .data(getData(array2D))
         .enter()
         .append("circle")
         .on("mouseover",function(stat)
             {
-                d3.select("#tooltip")
+                console.log(stat);
+                /*d3.select("#tooltip")
                     .style("left",(d3.event.pageX+20)+"px")
                     .style("top",(d3.event.pageY-25)+"px")
                     .text("("+stat.index+","+stat.arr+")")
-                    .classed("hidden",false)
+                    .classed("hidden",false)*/
             })
         .on("mouseout",function()
             {
                 d3.select("#tooltip")
                     .classed("hidden",true)
             })
+    
+    d3.select("#graph")
+            .append("path")
     
     drawArray(array2D,xScale,yScale)
 }
@@ -127,10 +133,4 @@ var drawArray = function(array2D,xScale,yScale)
         .datum(everything)
         .attr("d",lineGenerator)
 }
-
-var thing = [
-        {graph:"GDP", arr:[1.5,3.7,3.0,2.0,-1.0,2.9,-0.1,4.7,3.2,1.7,0.5,0.5,3.6,0.5,3.2,3.2,-1.1,5.5,5.0,2.3,3.2,3.0,1.3,0.1,2.0,1.9,2.2,2.0,2.3,2.2,3.2,3.5,2.5,3.5,2.9,1.1,3.1,2.0,1.9]}
-    ]
-
-//setup(thing);
 
