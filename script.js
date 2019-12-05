@@ -68,17 +68,18 @@ var setup = function(array2D)
     d3.select("#graph")
         .append("path")     
     
-    drawArray(getChangeData(array2D),xScale,yScale,"blue");
+    drawArray(getChangeData(array2D),xScale,yScale,"black");
     
     d3.select("#tooltip").append("button")
         .text("Change in Immigrant Population")
         .on("click",function()
             {
                 d3.select("#graph").selectAll("g").remove();
-                drawArray(getChangeData(array2D),xScale,yScale,"blue");
+                drawArray(getChangeData(array2D),xScale,yScale,"black");
             })
     
     d3.select("#tooltip").append("button")
+        .attr("id","GDP")
         .text("Change in Gross Domestic Product (GDP)")
         .on("click",function()
             {
@@ -87,7 +88,8 @@ var setup = function(array2D)
             })
     
     d3.select("#tooltip").append("button")
-        .text("Change in Violent Crimes in U.S.")
+        .attr("id","VC")
+        .text("Change in Total Violent Crimes in U.S.")
         .on("click",function()
             {
                 d3.select("#graph").selectAll("g").remove();
