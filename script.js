@@ -1,4 +1,4 @@
-var gdpPromise = d3.csv("gdp.csv")
+var gdpPromise = d3.csv("test.csv")
 
 gdpPromise.then(
 function(data)
@@ -11,14 +11,24 @@ function(err)
         console.log(err);
     })
 
+var getChangeData = function(data)
+{
+    return data.map(getChange);
+}
+
 var getChange = function(gdp)
 {
     return gdp.CHANGE; 
 }
 
-var getData = function(data)
+var getCrimeRateData = function(data)
 {
-    return data.map(getChange);
+    return data.map(getCrimeRate);
+}
+
+var getCrimeRate = function(gdp)
+{
+    return gdp.CRIMERATE;
 }
 
 var drawGraph = function(data)
@@ -54,8 +64,8 @@ var setup = function(array2D)
     var width = screen.width - margins.left - margins.right;
     var height = screen.height - margins.top - margins.bottom;
     
-    var xScale = d3.scaleLinear().domain([1,80]).range([0,width])
-    var yScale = d3.scaleLinear().domain([-15,20]).range([height,0])
+    var xScale = d3.scaleLinear().domain([0,11]).range([0,width])
+    var yScale = d3.scaleLinear().domain([-3,1500000]).range([height,0])
     
     //var cScale = d3.scaleOrdinal(d3.schemeTableau10)
     
@@ -78,11 +88,23 @@ var setup = function(array2D)
         .attr("transform","translate(45,"+margins.top+")")
         .call(yAxis)
     
-    console.log("help",getData(array2D))
+    d3.select("body").selectAll("button")
+        .data(array2D)
+        .enter()
+        .append("button")
+        .attr("id","CrimeRate")
+        .text("Compare Crime Rates")
+        /*.on("click",function(d)
+            {
+                console.log(getCrimeRateData(array2D));
+                return drawArray(getCrimeRateData(array2D),xScale,yScale)
+            })
     
-    d3.select("#graph")
+    //console.log("help",getChangeData(array2D))
+    
+    /* d3.select("#graph")
         .selectAll("circle")
-        .data(getData(array2D))
+        .data(getChangeData(array2D))
         .enter()
         .append("circle")
         .on("mouseover",function(stat)
@@ -92,27 +114,30 @@ var setup = function(array2D)
                     .style("left",(d3.event.pageX+20)+"px")
                     .style("top",(d3.event.pageY-25)+"px")
                     .text("("+stat.index+","+stat.arr+")")
-                    .classed("hidden",false)*/
+                    .classed("hidden",false)
             })
         .on("mouseout",function()
             {
                 d3.select("#tooltip")
                     .classed("hidden",true)
-            })
+            }) */
     
     d3.select("#graph")
             .append("path")
     
-    drawArray(array2D,xScale,yScale)
+    drawArray(getChangeData(array2D),xScale,yScale)
+    drawArray(getCrimeRateData(array2D),xScale,yScale)
 }
 
-var drawArray = function(array2D,xScale,yScale)
+var drawArray = function(data,xScale,yScale)
 {   
-    var everything = getData(array2D)
+    /*var everything = getChangeData(array2D)
+    
+    console.log(everything);*/
     
     var arrays = d3.select("#graph")
         .selectAll("g")
-        .data(everything)
+        .data(data)
         .enter()
         .append("g")
         .attr("fill","none")
@@ -129,8 +154,8 @@ var drawArray = function(array2D,xScale,yScale)
         })
         .curve(d3.curveNatural)
     
-    arrays.append("path")
-        .datum(everything)
+    arrays.datum(data)
+        .append("path")
         .attr("d",lineGenerator)
 }
 
