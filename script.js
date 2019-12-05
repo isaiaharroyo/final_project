@@ -11,49 +11,11 @@ function(err)
         console.log(err);
     })
 
-var getChangeData = function(data)
-{
-    return data.map(getChange);
-}
-
-var getChange = function(gdp)
-{
-    return gdp.CHANGE; 
-}
-
-var getCrimeRateData = function(data)
-{
-    return data.map(getCrimeRate);
-}
-
-var getCrimeRate = function(gdp)
-{
-    return gdp.CRIMERATE;
-}
-
-var drawGraph = function(data)
-{
-    console.log(data[0].CHANGE)
-    
-    var horizonChart = d3.horizonChart()
-        .height(80)
-        //.title(data[280].DATE)
-        .colors(['#313695', '#4575b4', '#74add1', '#abd9e9', '#fee090', '#fdae61', '#f46d43', '#d73027']);
-
-    var horizons = d3.select('body').selectAll('.horizon')
-        .data(data)
-        .enter()
-        .append('div')
-        .attr('class', 'horizon')
-        .each(horizonChart);
-}
-
-var screen = {width:1500,height:600}
+var screen = {width:800,height:600}
 var margins = {top:10,right:50,bottom:50,left:50}
 
 var setup = function(array2D)
 {
-    console.log(array2D)
     d3.select("svg")
         .attr("width",screen.width)
         .attr("height",screen.height)
@@ -64,12 +26,12 @@ var setup = function(array2D)
     var width = screen.width - margins.left - margins.right;
     var height = screen.height - margins.top - margins.bottom;
     
-    var xScale = d3.scaleLinear().domain([0,11]).range([0,width])
-    var yScale = d3.scaleLinear().domain([-3,1500000]).range([height,0])
+    var xScale = d3.scaleLinear().domain([0,10]).range([0,width])
+    var yScale = d3.scaleLinear().domain([-11,8]).range([height,0])
     
-    //var cScale = d3.scaleOrdinal(d3.schemeTableau10)
-    
-    var xAxis = d3.axisBottom(xScale)
+    var xScale2 = d3.scaleLinear().domain(d3.extent(array2D,function(d){return d.YEAR;})).range([0,width])
+        
+    var xAxis = d3.axisBottom(xScale2)
     var yAxis = d3.axisLeft(yScale)
     
     d3.select("svg")
@@ -79,7 +41,7 @@ var setup = function(array2D)
     d3.select(".axis")
         .append("g")
         .attr("id","xAxis")
-        .attr("transform","translate("+(margins.left-5)+","+(margins.top+(height-231))+")")
+        .attr("transform","translate("+(margins.left+8)+","+(margins.top+(height-312.6))+")")
         .call(xAxis)
     
     d3.select(".axis")
@@ -88,60 +50,84 @@ var setup = function(array2D)
         .attr("transform","translate(45,"+margins.top+")")
         .call(yAxis)
     
-    d3.select("body").selectAll("button")
-        .data(array2D)
-        .enter()
-        .append("button")
-        .attr("id","CrimeRate")
-        .text("Compare Crime Rates")
-        /*.on("click",function(d)
-            {
-                console.log(getCrimeRateData(array2D));
-                return drawArray(getCrimeRateData(array2D),xScale,yScale)
-            })
-    
-    //console.log("help",getChangeData(array2D))
-    
-    /* d3.select("#graph")
-        .selectAll("circle")
-        .data(getChangeData(array2D))
-        .enter()
-        .append("circle")
-        .on("mouseover",function(stat)
-            {
-                console.log(stat);
-                /*d3.select("#tooltip")
-                    .style("left",(d3.event.pageX+20)+"px")
-                    .style("top",(d3.event.pageY-25)+"px")
-                    .text("("+stat.index+","+stat.arr+")")
-                    .classed("hidden",false)
-            })
-        .on("mouseout",function()
-            {
-                d3.select("#tooltip")
-                    .classed("hidden",true)
-            }) */
+    d3.select("svg")
+            .append("text")
+            .attr("transform", "translate("+(width/2+90) + "," + (height - 269) + ")")
+            .style("text-anchor", "middle")
+            .text("Years")
+        
+        d3.select("svg")
+            .append("text")
+            .attr("transform", "rotate(-90)")
+            .attr("y", 0-margins.left+7)
+            .attr("x", 0-((height/2)))
+            .attr("dy", "4em")
+            .style("text-anchor", "middle")
+            .text("Percentage (%)")
     
     d3.select("#graph")
-            .append("path")
+        .append("path")     
     
-    drawArray(getChangeData(array2D),xScale,yScale)
-    drawArray(getCrimeRateData(array2D),xScale,yScale)
+    drawArray(getChangeData(array2D),xScale,yScale,"blue");
+    
+    d3.select("#tooltip").append("button")
+        .text("Change in Immigrant Population")
+        .on("click",function()
+            {
+                d3.select("#graph").selectAll("g").remove();
+                drawArray(getChangeData(array2D),xScale,yScale,"blue");
+            })
+    
+    d3.select("#tooltip").append("button")
+        .text("Change in Gross Domestic Product (GDP)")
+        .on("click",function()
+            {
+                d3.select("#graph").selectAll("g").remove();
+                drawArray(getGDPData(array2D),xScale,yScale,"green");
+            })
+    
+    d3.select("#tooltip").append("button")
+        .text("Change in Violent Crimes in U.S.")
+        .on("click",function()
+            {
+                d3.select("#graph").selectAll("g").remove();
+                drawArray(getViolCrimData(array2D),xScale,yScale,"#c4160d");
+            })
+
+    d3.select("#tooltip").append("button")
+        .text("Change in Robberies in U.S.")
+        .on("click",function()
+            {
+                d3.select("#graph").selectAll("g").remove();
+                drawArray(getRobData(array2D),xScale,yScale,"red");
+            })
+    
+    d3.select("#tooltip").append("button")
+        .text("Change in Aggressive Assaults in U.S.")
+        .on("click",function()
+            {
+                d3.select("#graph").selectAll("g").remove();
+                drawArray(getAggAssaData(array2D),xScale,yScale,"#f0661b");
+            })
+    
+    d3.select("#tooltip").append("button")
+        .text("Change in Burglaries in U.S.")
+        .on("click",function()
+            {
+                d3.select("#graph").selectAll("g").remove();
+                drawArray(getBurgData(array2D),xScale,yScale,"#fa8e13");
+            })
 }
 
-var drawArray = function(data,xScale,yScale)
-{   
-    /*var everything = getChangeData(array2D)
-    
-    console.log(everything);*/
-    
+var drawArray = function(data,xScale,yScale,color)
+{       
     var arrays = d3.select("#graph")
         .selectAll("g")
         .data(data)
         .enter()
         .append("g")
         .attr("fill","none")
-        .attr("stroke","black")
+        .attr("stroke",color)
         .attr("stroke-width",2)
 
     var lineGenerator = d3.line()
@@ -152,10 +138,69 @@ var drawArray = function(data,xScale,yScale)
         .y(function(num){
             return yScale(num)
         })
-        .curve(d3.curveNatural)
+        .curve(d3.curveLinear)
     
     arrays.datum(data)
         .append("path")
         .attr("d",lineGenerator)
+} 
+
+var getChangeData = function(data)
+{
+    return data.map(getChange);
 }
 
+var getChange = function(data)
+{
+    return data.ChgImmg; 
+}
+
+var getGDPData = function(data)
+{
+    return data.map(getGDP);
+}
+
+var getGDP = function(data)
+{
+    return data.ChgGdp; 
+}
+
+var getViolCrimData = function(data)
+{
+    return data.map(getViolCrim);
+}
+
+var getViolCrim = function(data)
+{
+    return data.ViolCrim; 
+}
+
+var getRobData = function(data)
+{
+    return data.map(getRob);
+}
+
+var getRob = function(data)
+{
+    return data.Rob; 
+}
+
+var getAggAssaData = function(data)
+{
+    return data.map(getAggAssa);
+}
+
+var getAggAssa = function(data)
+{
+    return data.AggAssa; 
+}
+
+var getBurgData = function(data)
+{
+    return data.map(getBurg);
+}
+
+var getBurg = function(data)
+{
+    return data.Burg; 
+}
